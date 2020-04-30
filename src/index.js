@@ -1,13 +1,13 @@
+import 'babel-polyfill';
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { schema, root } from './graphql';
+import schema from './graphql';
 import './db';
 
 const server = express();
 
 server.use('/graphql', graphqlHTTP({
   schema,
-  rootValue: root,
   graphiql: true
 }))
 
