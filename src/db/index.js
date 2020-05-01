@@ -1,11 +1,9 @@
-import mongo from 'mongodb';
+import mongo from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const {NODE_ENV, DB_DEV, DB_PROD} = process.env;
-
-const {MongoClient} = mongo;
 
 let url = '';
 
@@ -21,8 +19,16 @@ switch (NODE_ENV) {
     break;
 }
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
+mongo.connect(url, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
 });
+
+const db = mongo.connection;
+db.once('open', () => {
+  console.log('Database Connected!')
+});
+
+db.on('error', () => {
+  console.log('Failed to connect to DB!')
+})
